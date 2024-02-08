@@ -6,7 +6,7 @@ The following instructions lay out the steps necessary to set up a local develop
 <!-- omit in toc -->
 ## Table of Contents
 - [Introduction](#introduction)
-- [Fork the `OpenSearch_Parse_Changelog_Action` Repository and the `OpenSearch_Changeset_Bot` Repository](#fork-the-opensearch_parse_changelog_action-repository-and-the-opensearch_changeset_bot-repository)
+- [Fork the `OpenSearch_Changelog_Workflow` Repository and the `OpenSearch_Changelog_PR_Bridge` Repository](#fork-the-opensearch_changelog_workflow-repository-and-the-opensearch_changelog_pr_bridge-repository)
 - [Register Your Own GitHub App](#register-your-own-github-app)
   - [Initiate the Process](#initiate-the-process)
   - [Configure the App](#configure-the-app)
@@ -33,7 +33,7 @@ The following instructions lay out the steps necessary to set up a local develop
 
 Setting up a local development environment for the **Automated Changelog Process** involves seven major steps:
 
-1. Fork the `OpenSearch_Parse_Changelog_Action` repository and the `OpenSearch_Changeset_Bot` repository
+1. Fork the `OpenSearch_Changelog_Workflow` repository and the `OpenSearch_Changelog_PR_Bridge` repository
 2. Register your own GitHub App
 3. Use `ngrok` to open a tunnel to your local server
 4. Configure your forks
@@ -43,11 +43,11 @@ Setting up a local development environment for the **Automated Changelog Process
 
 The following sections detail how to perform each of these actions. You may wish to create bookmarks in your browser to easily navigate between the various repositories required for local development.
 
-## Fork the `OpenSearch_Parse_Changelog_Action` Repository and the `OpenSearch_Changeset_Bot` Repository
+## Fork the `OpenSearch_Changelog_Workflow` Repository and the `OpenSearch_Changelog_PR_Bridge` Repository
 
-For ease of reference, the `OpenSearch_Parse_Changelog_Action` repository will be referred to as the "Action repository", and the `OpenSearch_Changeset_Bot` repository will be referred to as the "Bot repository".
+For ease of reference, the `OpenSearch_Changelog_Workflow` repository will be referred to as the "Workflow repository", and the `OpenSearch_Changelog_PR_Bridge` repository will be referred to as the "Bridge repository".
 
-To begin the process of setting up a local development environment, you will need to create your own forks of both the [Action repository](https://github.com/BigSamu/OpenSearch_Parse_Changelog_Action/tree/main) and the [Bot repository](https://github.com/BigSamu/OpenSearch_Changeset_Bot).
+To begin the process of setting up a local development environment, you will need to create your own forks of both the [Workflow repository](https://github.com/BigSamu/OpenSearch_Changelog_Workflow) and the [Bridge repository](https://github.com/BigSamu/OpenSearch_Changelog_PR_Bridge).
 
 Clone each of these repositories onto your local machine and, from the root directory of each project folder, run `npm i` or `npm install` to install project dependencies.
 
@@ -70,7 +70,7 @@ You will add configuration information for your forked repositories at a later s
 
 ## Register Your Own GitHub App
 
-Registering your own GitHub App is necessary in order to give your forked Action repository the write permissions necessary to commit a changeset file to the forked repository.
+Registering your own GitHub App is necessary in order to give your forked Workflow repository the write permissions necessary to commit a changeset file to the test repository you will create in a later step. The following subsections walk through the process of registering your own App.
 
 ### Initiate the Process
 
@@ -80,38 +80,17 @@ Registering your own GitHub App is necessary in order to give your forked Action
 
 ### Configure the App
 
-The configuration page provides a number of options for customizing a GitHub App for specific use cases. Below is the information you will need to set up an `OpenSearch-bot` clone. The subheadings in this section represent the field labels where you will provide this information.
+The configuration page provides a number of options for customizing a GitHub App for specific use cases. Below is the information you will need to set up an `OpenSearch-Changeset-Bot` clone. The subheadings in this section represent the field labels where you will provide this information.
 
 <!-- omit in toc -->
 #### GitHub App name
 
-Enter a unique name for your GitHub App. We suggest something like "OpenSearch-bot-[unique-id]".
+Enter a unique name for your GitHub App. We suggest something like "OpenSearch-Changeset-Bot-[unique-id]".
 
 <!-- omit in toc -->
 #### Homepage URL
 
-Provide the URL of your fork of the `OpenSearch-bot` repository.
-
-<!-- omit in toc -->
-#### Webhook URL
-
-To generate this URL, you will need to activate `ngrok`: 
-
-- Open your command line and start an `ngrok` tunnel with the command `ngrok http [port]`, replacing `[port]` with the port number your local server is running on (e.g., `ngrok http 3000`).
-  
-- Locate the "Forwarding" URL displayed by `ngrok` (e.g., `https://****-****.ngrok-free.app`).
-  
-- In the "Webhook URL" field on your GitHub App's configuration page, enter this `ngrok` forwarding URL followed by the API endpoint `/api/webhook`. This combination forms the complete webhook URL.
-
-Your Webhook URL should resemble the following format:
-```
-https://****-****.ngrok-free.app/api/webhook
-```
-
-<!-- omit in toc -->
-#### Webhook secret (optional)
-
-Enter a secure secret in this field. It can be any string of text. You will need to add this secret as an environment variable in your forked repository, as well (instructions below).
+Provide the URL of your fork of the `OpenSearch_Changelog_PR_Bridge` repository.
 
 <!-- omit in toc -->
 #### Permissions
@@ -121,7 +100,6 @@ Click on the "Repository permissions" dropdown menu and set the following access
 - **Metadata:** Read only
 - **Pull requests:** Read and write
 - **Secrets:** Read and write
-- **Webhooks:** Read and write
 
 <!-- omit in toc -->
 #### Subscribe to events
@@ -137,15 +115,7 @@ Select "Any account".
 
 Once you have configured the app as outlined above, click the "Create GitHub App" button. You will be directed to a settings page for your newly-registered app.
 
-For the OAuth user authorization process, you will need to generate a **client secret:**
-
-- Under the "Client secrets" section, click the "Generate a new client secret" button.
-  
-- Copy this secret and store it in a secure location.
-  
-- Click the green "Save changes" button farther down the page.
-
-Additionally, your app requires a **private key** to authenticate itself with GitHub:
+Your app requires a **private key** to authenticate itself with GitHub:
 
 - Scroll down to the "Private keys" section at the bottom of the settings page.
   
