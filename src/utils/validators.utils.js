@@ -118,6 +118,30 @@ export const isGitHubAppNotInstalledOrSuspended = async (prData) => {
   return false;
 };
 
+/**
+ * Checks if the PR has the 'autocut' label.
+ * @param {InstanceType<typeof GitHub>} octokit - An Octokit instance.
+ * @param {Object} prData - An object containing the PR data.
+ * @returns {Promise<boolean>} - True if the PR has the 'autocut' label, false otherwise.
+ */
+export const isAutocut = async (octokit, prData) => {
+  try {
+    const { data: labels } = await octokit.rest.issues.listLabelsOnIssue({
+      owner: prData.baseOwner,
+      repo: prData.baseRepo,
+      issue_number: prData.prNumber,
+    });
+    const found = labels.some(label => label.name.toLowerCase() === 'autocut');
+    if (found) {
+      console.log("Detected 'autocut' label skipping changelog parsing process.");
+    }
+    return found;
+  } catch (error) {
+    console.error(`Error checking for 'autocut' label: ${error.message}`);
+    return false;
+  }
+};
+
 export const checkChangelogPrBridgeUrlDomainIsConfigured = () => {
   if (
     !CHANGELOG_PR_BRIDGE_URL_DOMAIN ||

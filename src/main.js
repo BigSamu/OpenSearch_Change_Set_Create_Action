@@ -24,6 +24,12 @@ const run = async () => {
     ))
       ? "manual"
       : "automatic";
+
+    const isAutocut = await isAutocut(octokit, prData);
+    if (isAutocut) {
+      return;
+    }
+
     const changesetEntriesMap = await handleChangelogEntriesParsing(
       octokit,
       prData,
